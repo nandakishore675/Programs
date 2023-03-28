@@ -1,0 +1,119 @@
+#include <stdio.h>
+void quicksort(int [],int,int);
+void mergesort(int[],int,int);
+void merge(int [],int,int,int);
+void main()
+{
+    int sel,n,a[100],i;
+    printf("\n\n\t0.EXIT   1.QUICK SORT   2.MERGE SORT   :  ");
+    scanf("%d",&sel);
+    while(sel!=0)
+    {
+        if(sel!=1 && sel!=2)
+        {
+            printf("\n\tINVALID CHOICE....");
+        }
+        else
+        {
+            printf("\n\n\tEnter the number of elements in the array : ");
+            scanf("%d",&n);
+            printf("\n\tEnter the elements to be sorted : ");
+            for(i=0;i<n;i++)
+            {
+                scanf("%d",&a[i]);
+            }
+            if(sel==1)
+            {
+                quicksort(a,0,n-1);
+                printf("\n\tThe sorted array(using quick sort) is : ");
+                for(i=0;i<n;i++)
+                {
+                    printf("%d ",a[i]);
+                }
+            }
+            else if(sel==2)
+            {
+                mergesort(a,0,n-1);
+                printf("\n\tThe sorted array(using merge sort) is : ");
+                for(i=0;i<n;i++)
+                {
+                    printf("%d ",a[i]);
+                }
+            }
+        }
+        printf("\n\n\n\n***************************************************************************************");
+        printf("\n\n\n\n\t0.EXIT   1.QUICK SORT   2.MERGE SORT   :  ");
+        scanf("%d",&sel);
+    }
+}
+void quicksort(int a[],int left,int right)
+{
+    int i,j,pivot,temp;
+    if(left<right)
+    {
+        i=left;
+        j=right;
+        pivot=a[left];
+        while(i<j)
+        {
+            while(a[i]<=pivot)
+            {
+                i++;
+            }
+            while(a[j]>pivot)
+            {
+                j--;
+            }
+            if(i<j)
+            {
+                temp=a[i];
+                a[i]=a[j];
+                a[j]=temp;
+            }
+        }
+        temp=a[left];
+        a[left]=a[j];
+        a[j]=temp;
+        quicksort(a,left,j-1);
+        quicksort(a,j+1,right);
+    }
+}
+void mergesort(int a[],int beg,int end)
+{
+    int mid;
+    if(beg<end)
+    {
+        mid=(beg+end)/2;
+        mergesort(a,beg,mid);
+        mergesort(a,mid+1,end);
+        merge(a,beg,mid,end);
+    }
+}
+void merge(int a[],int beg,int mid,int end)
+{
+    int i=beg,j=mid+1,index=beg,temp[100],k=0;
+    while(i<=mid && j<=end)
+    {
+        if(a[i]<a[j])
+        {
+            temp[index++]=a[i++];
+        }
+        else
+        {
+            temp[index++]=a[j++];
+        }
+    }
+    while(j<=end)
+    {
+        temp[index++]=a[j++];
+    }
+    while(i<=mid)
+    {
+        temp[index++]=a[i++];
+    }
+    while(k<index)
+    {
+        a[k]=temp[k];
+        k++;
+    }
+}

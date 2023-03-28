@@ -1,0 +1,104 @@
+#include<stdio.h>
+void bubblesort(int [],int);
+void insertionsort(int [],int);
+void selectionsort(int [],int);
+void main()
+{
+    int sel,n,a[10],i;
+    printf("\n\n\t0.EXIT   1.BUBBLE SORT    2.SELECTION SORT    3.INSERTION SORT   :  ");
+    scanf("%d",&sel);
+    while(sel!=0)
+    {
+        printf("\n\tEnter the number of elements : ");
+        scanf("%d",&n);
+        printf("\n\tEnter the elements to be sorted : ");
+        for(i=0;i<n;i++)
+        {
+            scanf("%d",&a[i]);
+        }
+        if(sel==1)
+        {
+            bubblesort(a,n);
+        }
+        else if(sel==2)
+        {
+            selectionsort(a,n);
+        }
+        else if(sel==3)
+        {
+            insertionsort(a,n);
+        }
+        else
+        {
+            printf("\n\tINVALID CHOICE.....");
+        }
+        printf("\n\n\t0.EXIT   1.BUBBLE SORT    2.SELECTION SORT    3.INSERTION SORT   :  ");
+        scanf("%d",&sel);
+    }
+}
+void bubblesort(int a[],int n)
+{
+    int i,j,temp;
+    for(i=0;i<(n-1);i++)
+    {
+        for(j=0;j<(n-i-1);j++)
+        {
+            if(a[j]>a[j+1])
+            {
+                temp=a[j];
+                a[j]=a[j+1];
+                a[j+1]=temp;
+            }
+        }
+    }
+    printf("\n\tThe sorted array(using bubble sort) is : ");
+    for(i=0;i<n;i++)
+    {
+        printf("%d ",a[i]);
+    }
+}
+void insertionsort(int a[],int n)
+{
+    int k,j,temp;
+    for(k=1;k<n;k++)
+    {
+        temp=a[k];
+        j=k-1;
+        while(temp<=a[j] && j>=0)
+        {
+            a[j+1]=a[j];
+            j=j-1;
+        }
+        a[j+1]=temp;
+    }
+    printf("\n\tThe sorted array(using insertion sort) is : ");
+    for(j=0;j<n;j++)
+    {
+        printf("%d ",a[j]);
+    }
+}
+void selectionsort(int a[],int n)
+{
+    int k,j,pos,small,temp,i;
+    for(k=0;k<n;k++)
+    {
+        small=a[k];
+        pos=k;
+        for(j=k+1;j<n;j++)
+        {
+            if(small>a[j])
+            {
+                small=a[j];
+                pos=j;
+            }
+        }
+        temp=a[k];
+        a[k]=a[pos];
+        a[pos]=temp;
+    }
+    printf("\n\tThe sorted array(using selection sort) is : ");
+    for(i=0;i<n;i++)
+    {
+        printf("%d ",a[i]);
+    }
+}

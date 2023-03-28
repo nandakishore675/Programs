@@ -1,0 +1,295 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+typedef struct graph
+{
+	int vertex;
+	int status;
+	struct graph *next;
+}graph;
+
+#define max 100
+
+graph *g[max],*ptr,*s[max];
+int adjmat[max][max],n,a[max],top=-1,front=-1,rear=-1;
+
+void display()
+{
+	printf("\nAdjacency Matrix:\n");
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+		    printf("%d\t",adjmat[i][j]);
+		}
+		printf("\n");
+	}
+	printf("\nAdjacency List:\n");
+	for(int i=0;i<n;i++)
+	{
+		ptr=g[i];
+        while(ptr->next!=NULL)
+        {
+        	printf("%d ---> ",ptr->vertex);
+        	ptr=ptr->next;
+		}
+		printf("%d",ptr->vertex);
+		printf("\n");
+	}
+}
+
+void indegree()
+{
+	int item,flag=0,i,j,indeg=0;
+	printf("enter the node to find in degree: ");
+	scanf("%d",&item);
+	for(i=0;i<n;i++)
+	{
+		if(a[i]==item)
+		{
+			flag=1;
+			break;
+		}
+	}
+	if(flag==0)
+	{
+		printf("The entered node does not exist!!\n");
+		return;
+	}
+	for(j=0;j<n;j++)
+	{
+	    indeg+=adjmat[j][i];
+	}
+	printf("The in degree of %d is %d.\n",item,indeg);
+}
+
+void outdegree()
+{
+	int item,flag=0,i,j,outdeg=0;
+	printf("enter the node to find out degree: ");
+	scanf("%d",&item);
+	for(i=0;i<n;i++)
+	{
+		if(a[i]==item)
+		{
+			flag=1;
+			break;
+		}
+	}
+	if(flag==0)
+	{
+		printf("The entered node does not exist!!\n");
+		return;
+	}
+	for(j=0;j<n;j++)
+	{
+	    outdeg+=adjmat[i][j];
+	}
+	printf("The out degree of %d is %d.\n",item,outdeg);
+}
+
+void push(graph *item)
+{   
+       if (top==max-1)
+       {
+		    printf("\nStack overflow!!\n");
+		    exit(EXIT_FAILURE);
+       }
+       else
+       {
+        	s[++top]=item;
+       }
+}
+
+graph* pop ()
+{  
+    return s[top--];
+}
+
+void dfs()
+{
+	int flag=0,item,i;
+	printf("enter the source vertex: ");
+	scanf("%d",&item);
+	for(i=0;i<n;i++)
+	{
+	    (g[i])->status=1;
+	}
+	for(i=0;i<n;i++)
+	{
+		if((g[i])->vertex==item)
+		{
+		    flag=1;
+		    break;
+	    }
+	}
+	if(flag==0)
+	{
+		printf("The entered node does not exist!!\n");
+		return;
+	}
+	push(g[i]);
+	(g[i])->status=2;
+	printf("DFS:\t");
+	while(top!=-1)
+	{
+		ptr=pop();
+		printf("%d\t",ptr->vertex);
+		ptr->status=3;
+		while(ptr->next!=NULL)
+		{
+            ptr=ptr->next;
+			for(i=0;i<n;i++)
+			{
+				if((g[i])->vertex==ptr->vertex)
+				{
+				    break;
+				}
+			}
+			if((g[i])->status==1)
+			{
+				push(g[i]);
+				(g[i])->status=2;
+			}
+        }
+	}
+	printf("\n");
+}
+
+void insert(graph *item)
+{
+    if(rear==max-1)
+    {
+        printf("\nQueue Overflow!!\n");
+	    exit(EXIT_FAILURE);
+    }
+    else
+    {
+        s[++rear]=item;
+        if( front == -1 )
+        {
+            front=0;
+        }
+    }
+}
+
+graph* delete()
+{
+        graph *p;
+        p=s[front];
+	    if( front==rear) 
+            {
+                front = -1;
+                rear = -1;
+            }
+            else
+                front=front+1;
+	    return p;
+}
+
+void bfs()
+{
+	int flag=0,item,i;
+	printf("enter the source vertex: ");
+	scanf("%d",&item);
+	for(i=0;i<n;i++)
+	{
+	   (g[i])->status=1;
+	}
+	for(i=0;i<n;i++)
+	{
+		if((g[i])->vertex==item)
+		{
+			flag=1;
+			break;
+		}
+	}
+	if(flag==0)
+	{
+		printf("The entered node does not exist!!\n");
+		return;
+	}
+	insert(g[i]);
+	(g[i])->status=2;
+	printf("BFS:\t");
+	while(front!=-1)
+	{
+		ptr=delete();
+		printf("%d\t",ptr->vertex);
+		ptr->status=3;
+		while(ptr->next!=NULL)
+		{
+            ptr=ptr->next;
+			for(i=0;i<n;i++)
+			{
+				if((g[i])->vertex==ptr->vertex)
+				{
+				    break;
+				}
+			}
+			if((g[i])->status==1)
+			{
+				insert(g[i]);
+				(g[i])->status=2;
+			}
+        }
+	}
+	printf("\n");
+}
+
+void main()
+{
+	int x,z;
+	graph *new;
+	printf("enter the number of verices: ");
+	scanf("%d",&n);
+	printf("enter the vertices: ");
+	for(int i=0;i<n;i++)
+	{
+		scanf("%d",&a[i]);
+		new=(graph*) malloc(sizeof(graph));
+		new->vertex=a[i];
+		new->next=NULL;
+		g[i]=new;
+	}
+	printf("Enter 1 if yes, 0 if no.\n");
+	for(int i=0;i<n;i++)
+	{
+		for(int j=0;j<n;j++)
+		{
+			printf("Does %d have an edge with %d? ",a[i],a[j]);
+			scanf("%d",&x);
+			if(x==1)
+			{
+				adjmat[i][j]=1;
+				new=(graph*) malloc(sizeof(graph));
+				new->vertex=a[j];
+				new->next=NULL;
+				ptr=g[i];
+        		while(ptr->next!=NULL)	ptr=ptr->next;
+        		ptr->next=new;
+			}
+			else adjmat[i][j]=0;
+		}
+	}
+	while(1)
+	{
+		printf("\nMENU\n1. Find in degree\n2. Find out degree\n3. DFS\n4. BFS\n5. Display adjacency list and adjacency matrix\n6. Exit.\nEnter choice :  "); 
+		scanf("%d",&z);
+		switch(z)
+		{
+			case 1: indegree();
+			break;
+			case 2: outdegree();
+			break;
+			case 3: dfs();
+			break;
+			case 4: bfs();
+			break;
+			case 5: display();
+			break;
+			case 6: exit(EXIT_SUCCESS);
+			default: printf("Invalid Choice!!\n");
+		}
+	}
+}

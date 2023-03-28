@@ -1,0 +1,281 @@
+#include <stdio.h>
+#include<stdlib.h>
+struct node
+{
+    int coef,expo;
+    struct node *next;
+}*ptr1,*ptr2,*ptr3,*ptr4,*start1=NULL,*start2=NULL,*start3=NULL,*newnode;
+void add(struct node *,struct node *,int ,int);
+void multiply(struct node *,struct node *,int ,int);
+void display(struct node *);
+void main()
+{
+    int n1,n2,i,sel;
+    printf("\n\n\tEnter the number of terms in first polynomial : ");
+    scanf("%d",&n1);
+    printf("\tEnter the coefficient and exponent(in decreasing order) of each terms in the first polynomial : ");
+    for(i=0;i<n1;i++)
+    {
+        newnode=(struct node *)malloc(sizeof(struct node));
+        scanf("%d%d",&newnode->coef,&newnode->expo);
+        newnode->next=NULL;
+        if(start1==NULL)
+        {
+            start1=newnode;
+        }
+        else
+        {
+            ptr1=start1;
+            while(ptr1->next!=NULL)
+            {
+                ptr1=ptr1->next;
+            }
+            ptr1->next=newnode;
+        }
+    }
+    printf("\n\tThe first polynomial is : ");
+    display(start1);
+    printf("\n\tEnter the number of terms of second polynomial : ");
+    scanf("%d",&n2);
+    printf("\n\tEnter the coefficient and exponent(in decreasing order) of each terms in the second polynomial : ");
+    for(i=0;i<n2;i++)
+    {
+        newnode=(struct node *)malloc(sizeof(struct node));
+        scanf("%d%d",&newnode->coef,&newnode->expo);
+        newnode->next=NULL;
+        if(start2==NULL)
+        {
+            start2=newnode;
+        }
+        else
+        {
+            ptr2=start2;
+            while(ptr2->next!=NULL)
+            {
+                ptr2=ptr2->next;
+            }
+            ptr2->next=newnode;
+        }
+    }
+    printf("\n\tThe second polynomial is : ");
+    display(start2);
+    printf("\n\n\n\t0.Exit   1.Add   2.Multiply   :  ");
+    scanf("%d",&sel);
+    while(sel!=0)
+    {
+        if(sel==1)
+        {
+            add(start1,start2,n1,n2);
+        }
+        else if(sel==2)
+        {
+            multiply(start1,start2,n1,n2);
+        }
+        else
+        {
+            printf("\n\tInvalid choice....");
+        }
+        printf("\n\n\n\t0.Exit   1.Add   2.Multiply   :  ");
+        scanf("%d",&sel);
+    }
+}
+void add(struct node *start1,struct node *start2,int n1,int n2)
+{
+    int i=0,j=0;
+    ptr2=start2;
+    ptr1=start1;
+    while((ptr1!=NULL) && (ptr2!=NULL))
+    {
+        newnode=(struct node *)malloc(sizeof(struct node));
+        if(ptr1->expo == ptr2->expo)
+        {
+            newnode->expo=ptr1->expo;
+            newnode->coef=ptr1->coef+ptr2->coef;
+            newnode->next=NULL;
+            if(start3==NULL)
+            {
+                start3=newnode;
+            }
+            else
+            {
+                ptr3=start3;
+                while(ptr3->next!=NULL)
+                {
+                    ptr3=ptr3->next;
+                }
+                ptr3->next=newnode;
+            }
+            ptr1=ptr1->next;
+            ptr2=ptr2->next;
+        }
+        else if(ptr1->expo > ptr2->expo)
+        {
+            newnode->expo=ptr1->expo;
+            newnode->coef=ptr1->coef;
+            newnode->next=NULL;
+            if(start3==NULL)
+            {
+                start3=newnode;
+            }
+            else
+            {
+                ptr3=start3;
+                while(ptr3->next!=NULL)
+                {
+                    ptr3=ptr3->next;
+                }
+                ptr3->next=newnode;
+            }
+            ptr1=ptr1->next;
+        }
+        else 
+        {
+            newnode->expo=ptr2->expo;
+            newnode->coef=ptr2->coef;
+            newnode->next=NULL;
+            if(start3==NULL)
+            {
+                start3=newnode;
+            }
+            else
+            {
+                ptr3=start3;
+                while(ptr3->next!=NULL)
+                {
+                    ptr3=ptr3->next;
+                }
+                ptr3->next=newnode;
+            }
+            ptr2=ptr2->next;
+        }
+    }
+    while(ptr1!=NULL)
+    {
+        newnode=(struct node *)malloc(sizeof(struct node));
+        newnode->expo=ptr1->expo;
+        newnode->coef=ptr1->coef;
+        newnode->next=NULL;
+        ptr3=start3;
+        while(ptr3->next!=NULL)
+        {
+            ptr3=ptr3->next;
+        }
+        ptr3->next=newnode;
+        ptr1=ptr1->next;
+    }
+    while(ptr2!=NULL)
+    {
+        newnode=(struct node *)malloc(sizeof(struct node));
+        newnode->expo=ptr2->expo;
+        newnode->coef=ptr2->coef;
+        newnode->next=NULL;
+        ptr3=start3;
+        while(ptr3->next!=NULL)
+        {
+            ptr3=ptr3->next;
+        }
+        ptr3->next=newnode;
+        ptr2=ptr2->next;
+    }
+    printf("\n\n\tThe resultant polynomial is : ");
+    display(start3);
+    start1=start2=start3=NULL;
+}
+void multiply(struct node *start1,struct node *start2,int n1,int n2)
+{
+    int k,tempe,tempco,count=0;
+    struct node *ptr,*preptr,*d;
+    ptr1=start1;
+    ptr2=start2;
+    for(ptr1=start1;ptr1!=NULL;ptr1=ptr1->next)
+    {
+        for(ptr2=start2;ptr2!=NULL;ptr2=ptr2->next)
+        {
+            newnode=(struct node *)malloc(sizeof(struct node));
+            newnode->expo=ptr1->expo + ptr2->expo;
+            newnode->coef=ptr1->coef * ptr2->coef;
+            newnode->next=NULL;
+            count++;
+            if(start3==NULL)
+            {
+                start3=newnode;
+            }
+            else
+            {
+                ptr3=start3;
+                while(ptr3->next!=NULL)
+                {
+                    ptr3=ptr3->next;
+                }
+                ptr3->next=newnode;
+            }
+        }
+    }
+    ptr=start3;
+    while(ptr->next!=NULL)
+    {
+        preptr=ptr->next;
+        while(preptr!=NULL)
+        {
+           if(preptr->expo > ptr->expo)
+           {
+               tempco=preptr->coef;
+               preptr->coef=ptr->coef;
+               ptr->coef=tempco;
+               tempe=preptr->expo;
+               preptr->expo=ptr->expo;
+               ptr->expo=tempe;
+           }
+           preptr=preptr->next;
+        }
+        ptr=ptr->next;
+    }
+    ptr=start3;
+    while (ptr != NULL && ptr->next != NULL)
+    {
+        preptr = ptr;
+        while (preptr->next != NULL)
+        {
+            if (ptr->expo == preptr->next->expo) 
+            {
+                ptr->coef=ptr->coef + preptr->next->coef;
+                d=preptr->next;
+                preptr->next=preptr->next->next;
+                free(d);
+            }
+            else
+                preptr=preptr->next;
+        }
+        ptr=ptr->next;
+    }
+    printf("\n\tThe resultant polynomial is : ");
+    display(start3);
+    start1=start2=start3=NULL;
+}
+void display(struct node *start)
+{
+    struct node *ptr;
+    ptr=start;
+    if(start->next==NULL)
+    {
+        printf("%dx^%d",start->coef,start->expo);
+    }
+    else
+    {
+        printf(" %dx^%d +",start->coef,start->expo);
+        while(ptr->next!=NULL)
+        {
+            if(ptr->next->next==NULL)
+            {
+                printf("%dx^%d",ptr->next->coef,ptr->next->expo);
+                ptr=ptr->next;
+            }
+            else
+            {
+                printf(" %dx^%d +",ptr->next->coef,ptr->next->expo);
+                ptr=ptr->next;
+            }
+        }
+    }
+}
+

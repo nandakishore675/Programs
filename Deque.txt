@@ -1,0 +1,232 @@
+#include <stdio.h>
+int rear,front,q[100],max;
+void irqueue();
+void orqueue();
+void insertrear();
+void insertfront();
+void deleterear();
+void deletefront();
+void display();
+void main()
+{
+    int sel;
+    printf("\n\n\t1.Input Restricted Queue  2.Output Restricted Queue  3.Exit : ");
+    scanf("%d",&sel);
+    while(sel!=3)
+    {
+        if(sel==1)
+        {
+            irqueue();
+        }
+        else if(sel==2)
+        {
+            orqueue();
+        }
+        else
+        {
+            printf("\n\tInvalid choice...");
+        }
+        printf("\n\n\t1.Input Restricted Queue  2.Output Restricted Queue  3.Exit : ");
+        scanf("%d",&sel);
+    }
+}
+void irqueue()
+{
+    int sel;
+    front=-1;
+    rear=-1;
+    printf("\n\tEnter the maximum size of the queue : ");
+    scanf("%d",&max);
+    printf("\n\n\t1.Insert(rear)  2.Delete(rear)  3.Delete(front)   4.Display   5.Exit : ");
+    scanf("%d",&sel);
+    while(sel!=5)
+    {
+        if(sel==1)
+        {
+            insertrear();
+        }
+        else if(sel==2)
+        {
+            deleterear();
+        }
+        else if(sel==3)
+        {
+            deletefront();
+        }
+        else if(sel==4)
+        {
+            display();
+        }
+        else
+        {
+            printf("\n\tInvalid choice...");
+        }
+        printf("\n\n\t1.Insert(rear)  2.Delete(rear)  3.Delete(front)   4.Display   5.Exit : ");
+        scanf("%d",&sel);
+    }
+    printf("\n\n***************************************************************************************************************\n\n");
+}
+void orqueue()
+{
+    int sel;
+    front=-1;
+    rear=-1;
+    printf("\n\tEnter the maximum size of the queue : ");
+    scanf("%d",&max);
+    printf("\n\n\t1.Insert(front)   2.Insert(rear)    3.Delete(front)    4.Display    5.Exit : ");
+    scanf("%d",&sel);
+    while(sel!=5)
+    {
+        if(sel==1)
+        {
+            insertfront();
+        }
+        else if(sel==2)
+        {
+            insertrear();
+        }
+        else if(sel==3)
+        {
+            deletefront();
+        }
+        else if(sel==4)
+        {
+            display();
+        }
+        else
+        {
+            printf("\n\tInvalid choice....");
+        }
+        printf("\n\n\t1.Insert(front)   2.Insert(rear)    3.Delete(front)    4.Display    5.Exit : ");
+        scanf("%d",&sel);
+    }
+    printf("\n\n*******************************************************************************************************************\n\n");
+}
+void insertrear()
+{
+    int data;
+    if((rear==max-1 && front==0) || (front==rear+1))
+    {
+        printf("\n\tThe queue is full....");
+    }
+    else
+    {
+        printf("\n\tEnter the data to be inserted : ");
+        scanf("%d",&data);
+        rear=(rear+1)%max;
+        q[rear]=data;
+        if(front==-1)
+        {
+            front=0;
+        }
+        display();
+    }
+}
+void insertfront()
+{
+    int data;
+    if((rear==max-1 && front==0) || (front==rear+1))
+    {
+        printf("\n\tThe queue is full....");
+    }
+    else
+    {
+        printf("\n\tEnter the data to be inserted : ");
+        scanf("%d",&data);
+        if(front==-1)
+        {
+            front=0;
+            rear=0;
+            q[front]=data;
+            display();
+        }
+        else if(front==0)
+        {
+            front=max-1;
+            q[front]=data;
+            display();
+        }
+        else
+        {
+            front=front-1;
+            q[front]=data;
+            display();
+        }
+    }
+}
+void deletefront()
+{
+    if(front==-1)
+    {
+        printf("\n\tThe queue is empty...");
+    }
+    else
+    {
+        if(front==rear)
+        {
+            front=-1;
+            rear=-1;
+            printf("\n\tSuccessfully deleted element...queue is currently empty...no more elements to be deleted...");
+        }
+        else
+        {
+            front=(front+1)%max;
+            display();
+        }
+    }
+}
+void deleterear()
+{
+    if(front==-1)
+    {
+        printf("\n\tThe queue is empty....");
+    }
+    else
+    {
+        if(front==rear)
+        {
+            front=-1;
+            rear=-1;
+            printf("\n\tSuccessfully deleted element...queue is currently empty...no more elements to be deleted...");
+        }
+        else if(rear==0)
+        {
+            rear=max-1;
+            display();
+        }
+        else
+        {
+            rear=rear-1;
+            display();
+        }
+    }
+}
+void display()
+{
+    int i;
+    if(front==-1)
+    {
+        printf("\n\tThe queue is empty....");
+    }
+    printf("\n\tThe queue is :  ");
+    if(front<=rear)
+    {
+        for(i=front;i<=rear;i++)
+        {
+            printf("%d  ",q[i]);
+        }
+    }
+    else
+    {
+        i=front;
+        while(i<max)
+        {
+            printf("%d  ",q[i]);
+            i++;
+        }
+        for(i=0;i<=rear;i++)
+        {
+            printf("%d  ",q[i]);
+        }
+    }
+}

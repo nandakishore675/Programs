@@ -1,0 +1,148 @@
+#include <stdio.h>
+int rear=-1,front=-1,max,x=0;
+void cqueueinsert();
+void cqueuedelete();
+void cqueuedisplay();
+struct queue
+{
+    int data,priority;
+}cq[100];
+void main()
+{
+    int sel;
+    printf("\n\n\tEnter the maximum size of circular queue :");
+    scanf("%d",&max);
+    printf("\n\t1.Insert   2.Delete    3.Isempty   4.Isfull   5.Display   6.Exit  :");
+    scanf("%d",&sel);
+    while(sel!=6)
+    {
+        if(sel==1)
+        {
+            cqueueinsert();
+        }
+        else if(sel==2)
+        {
+            cqueuedelete();
+        }
+        else if(sel==3)
+        {
+            if(front==-1)
+            {
+                printf("\n\tThe circular queue is empty....");
+            }
+            else
+            {
+                printf("\n\tThe circular queue is not empty....");
+            }
+        }
+        else if(sel==4)
+        {
+            if((rear==max-1 && front==0) || (front==rear+1))
+            {
+                printf("\n\tThe circular queue is full...");
+            }
+            else
+            {
+                printf("\n\tThe circular queue is not full...");
+            }
+        }
+        else if(sel==5)
+        {
+            cqueuedisplay();
+        }
+        else
+        {
+            printf("\n\tInvalid choice....");
+        }
+        printf("\n\n\t1.Insert   2.Delete    3.Isempty   4.Isfull   5.Display   6.Exit  :");
+        scanf("%d",&sel);
+    }
+    printf("\n\n***********************************************************************************\n\n");
+    
+}
+void cqueueinsert()
+{
+    int tempp,j,k,tempd;
+    if((rear==max-1 && front==0) || (front==rear+1))
+    {
+        printf("\n\tThe Circular queue is full...");
+    }
+    else
+    {
+        printf("\n\tEnter the data to be inserted and its priority : ");
+        scanf("%d %d",&cq[x].data,&cq[x].priority);
+        x++;
+        rear=-1;
+        for(j=0;j<x;j++)
+        {
+            for(k=j+1;k<x;k++)
+            {
+                if(cq[j].priority>cq[k].priority)
+                {
+                    tempd=cq[j].data;
+                    cq[j].data=cq[k].data;
+                    cq[k].data=tempd;
+                    tempp=cq[j].priority;
+                    cq[j].priority=cq[k].priority;
+                    cq[k].priority=tempp;
+                }
+            }
+            rear=(rear+1)%max;
+            cq[rear].data=cq[j].data;
+        }
+        if(front==-1)
+        {
+            front=0;
+        }
+        cqueuedisplay();
+    }
+}
+void cqueuedelete()
+{
+    if(front==-1)
+    {
+        printf("\n\tThe Circular queue is empty...");
+    }
+    else
+    {
+        if(front==rear)
+        {
+            front=rear=-1;
+            printf("\n\tSuccssfully deleted the element..Queue is empty now..no more elements to be deleted...");
+        }
+        else
+        {
+            front=(front+1)%max;
+            cqueuedisplay();
+        }
+    }
+}
+void cqueuedisplay()
+{
+    int i;
+    if(front==-1)
+    {
+        printf("\n\tThe queue is empty....");
+    }
+    printf("\n\tThe Circular queue is :  ");
+    if(front<=rear)
+    {
+        for(i=front;i<=rear;i++)
+        {
+            printf("%d  ",cq[i].data);
+        }
+    }
+    else
+    {
+        i=front;
+        while(i<max)
+        {
+            printf("%d  ",cq[i].data);
+            i++;
+        }
+        for(i=0;i<=rear;i++)
+        {
+            printf("%d  ",cq[i].data);
+        }
+    }
+}

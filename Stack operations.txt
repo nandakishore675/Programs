@@ -1,0 +1,112 @@
+#include <stdio.h>
+#include<stdlib.h>
+int top=-1;
+void push(int [],int);
+void pop(int []);
+void peek(int []);
+void empty(int []);
+void full(int [],int);
+void main()
+{
+    int n,a[3],max=3;
+    printf("\n\n\t\t\t1.Push  2.Pop   3.Peek  4.Is empty  5.Is full  6.Exit  : ");
+    scanf("%d",&n);
+    while(n!=7)
+    {
+        if(n==1)
+        {
+            push(a,max);
+        }
+        else if(n==2)
+        {
+            pop(a);
+        }
+        else if(n==3)
+        {
+            peek(a);
+        }
+        else if(n==4)
+        {
+            empty(a);
+        }
+        else if(n==5)
+        {
+            full(a,max);
+        }
+        else
+        {
+            exit(0);
+        }
+        printf("\n\n\t\t\t1.Push  2.Pop   3.Peek  4.Is empty  5.Is full  6.Exit  : ");
+        scanf("%d",&n);
+    }
+}
+void push(int a[],int max)
+{
+    int p,i;
+    printf("\n\tEnter the element to be pushed : ");
+    scanf("%d",&p);
+    if(top==max-1)
+    {
+        printf("\n\tOverflow....");
+    }
+    else
+    {
+        a[++top]=p;
+        printf("\n\tThe currrent stack is : \n\n");
+        for(i=top;i>=0;i--)
+        {
+            printf("\t\t\t\t%d\n",a[i]);
+        }
+    }
+}
+void pop(int a[])
+{
+    int i;
+    if(top==-1)
+    {
+        printf("\n\tUnderflow....");
+    }
+    else
+    {
+        top=top-1;
+        if(top==-1)
+        {
+            printf("\n\tSuccessfully popped...stack is currently empty...");
+        }
+        else
+        {
+            printf("\n\tThe currrent stack is : \n\n");
+            for(i=top;i>=0;i--)
+            {
+                printf("\t\t\t\t%d\n",a[i]);
+            }
+        }
+    }
+}
+void peek(int a[])
+{
+    printf("\n\tThe topmost element of the stack is : %d",a[top]);
+}
+void empty(int a[])
+{
+    if(top==-1)
+    {
+        printf("\n\tThe stack is empty (UNDERFLOW)....");
+    }
+    else
+    {
+        printf("\n\tThe stack is not empty....");
+    }
+}
+void full(int a[],int max)
+{
+    if(top==max-1)
+    {
+        printf("\n\tThe stack is full (OVERFLOW)....");
+    }
+    else
+    {
+        printf("\n\tThe stack is not full....");
+    }
+}

@@ -1,0 +1,122 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<string.h>
+void postfix(char [],int);
+void evaluate(char [],int);
+int priority(char ch)
+{
+    if(ch=='+' || ch=='-')
+    {
+        return 1;
+    }
+    else if(ch=='*' || ch=='/')
+    {
+        return 2;
+    }
+    else
+    {
+        return 0;
+    }
+}
+void main()
+{
+    char in[100];
+    int n,l;
+    printf("\n\n\n\t1.Infix expression    0.Exit   :  ");
+    scanf("%d",&n);
+    while(n!=0)
+    {
+        printf("\n\tEnter the infix expression : ");
+        scanf("%s", in);
+        l=strlen(in);
+        postfix(in,l);
+        printf("\n\n\n\t1.Infix expression    0.Exit   :  ");
+        scanf("%d",&n);
+    }
+}
+void postfix(char in[],int l)
+{
+    char stack[100],po[100];
+    int i,top=0,j=0,a,b;
+    stack[0]='(';
+    in[l]=')';
+    for(i=0;i<l+1;i++)
+    {
+        if(isdigit(in[i]))
+        {
+            po[j]=in[i];
+            j++;
+        }
+         else if(in[i]=='(')
+        {
+            stack[++top]=in[i];
+        }
+        else if(in[i]==')')
+        {
+            while(stack[top]!='(')
+            {
+                po[j]=stack[top];
+                top=top-1;
+                j++;
+            }
+            top=top-1;
+        }
+        else
+        {
+            if(stack[top]!='(')
+            {
+                a=priority(in[i]);
+                b=priority(stack[top]);
+                while(a<=b)
+                {
+                    po[j]=stack[top];
+                    top=top-1;
+                    j++;
+                    b=priority(stack[top]);
+                }
+            }
+            stack[++top]=in[i];
+        }
+    }
+    printf("\n\n\tPostfix expression : ");
+    for(i=0;i<j;i++)
+    {
+        printf("%c",po[i]);
+    }
+    evaluate(po,j);
+}
+void evaluate(char po[],int j)
+{
+    int i,top=-1,a,stack[100];
+    for(i=0;i<j;i++)
+    {
+        if(isdigit(po[i]))
+        {
+            stack[++top]=po[i]-'0';
+        }
+        else
+        {
+            if(po[i]=='+')
+            {
+                stack[top-1]+=stack[top];
+                top=top-1;
+            }
+            else if(po[i]=='-')
+            {
+                stack[top-1]-=stack[top];
+                top=top-1;
+            }
+            else if(po[i]=='*')
+            {
+                stack[top-1]*=stack[top];
+                top=top-1;
+            }
+            else
+            {
+                stack[top-1]/=stack[top];
+                top=top-1;
+            }
+        }
+    }
+    printf("\n\n\tValue after evaluation = %d",stack[top]);
+}

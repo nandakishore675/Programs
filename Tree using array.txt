@@ -1,0 +1,230 @@
+#include<stdio.h>
+#include<math.h>
+int a[100] = {[0 ... 99] = -1};
+int size, h, loc = 0;
+void display()
+{
+    int i;
+    for(i = 1; i <= size; i++)
+    {
+        if(a[i] != -1)
+        {
+            printf("%d ", a[i]);
+        }
+        else
+        {
+        printf("- ");
+        }
+    }
+}
+void buildtree(int i, int item)
+{
+    int newL, newR, ch;
+    if(i != 0)
+    {
+        a[i] = item;
+        printf("\tDoes %d have left child? - 1. Yes, 2. No: ", a[i]);
+        scanf("%d", &ch);
+        if(ch == 1)
+        {
+            printf("\tEnter data of left child: ");
+            scanf("%d", &newL);
+            buildtree(2 * i, newL);
+        }
+        else
+        {
+            buildtree(0, 0);
+        }
+        printf("\tDoes %d have right child? - 1. Yes, 2. No: ", a[i]);
+        scanf("%d", &ch);
+        if(ch == 1)
+        {
+            printf("\tEnter data of right child: ");
+            scanf("%d", &newR);
+            buildtree(2 * i + 1, newR);
+        }
+        else
+        {
+            buildtree(0, 0);
+        }
+    }
+}
+int search(int i, int key)
+{
+    if(a[i] == -1 || a[i] == key)
+    {
+        if(a[i] == key)
+        {
+            loc = i;
+        }
+        return i;
+    }
+    else
+    {
+        if(a[search(2 * i, key)] == -1)
+        {
+            search(2 * i + 1, key);
+        }
+    }
+}
+void insert(int key)
+{
+    int ch, item;
+    search(1, key);
+    if(a[loc] != key)
+    {
+        printf("\tParent node not found.");
+        return;
+    }
+    if(a[2 * loc] == -1 || a[2 * loc + 1] == -1)
+    {
+        printf("\tInsert as - 1. Left child, 2. Right child: ");
+        scanf("%d", &ch);
+        if(ch == 1)
+        {
+            if(a[2 * loc] == -1)
+            {
+                printf("\tEnter data to insert: ");
+                scanf("%d", &item);
+                if(2 * loc > size)
+                {
+                    h++;
+                    size = pow(2, h + 1) - 1;
+                }
+                a[2 * loc] = item;
+            }
+            else
+            {
+                printf("\tLeft child is not empty.");
+            }
+        }
+        else
+        {
+            if(a[2 * loc + 1] == -1)
+            {
+                printf("\tEnter data to insert: ");
+                scanf("%d", &item);
+                if(2 * loc + 1 > size)
+                {
+                    h++;
+                    size = pow(2, h + 1) - 1;
+                }
+                a[2 * loc + 1] = item;
+            }
+            else
+            {
+                printf("\tRight child is not empty.");
+            }
+        }
+    }
+    else
+    {
+        printf("\tLeft and right children are not empty.");
+    }
+}
+void delete(int key)
+{
+    int k, flag = 0;
+    search(1, key);
+    if(a[loc] == key)
+    {
+        if(a[2 * loc] == -1 && a[2 * loc + 1] == -1)
+        {
+            a[loc] = -1;
+            for(k = pow(2, h); k <= size; k++)
+            {
+                if(a[k] != -1)
+                {
+                    flag = 1;
+                }
+            }
+            if(flag == 0)
+            {
+                h--;
+                size = pow(2, h + 1) - 1;
+            }
+        }
+        else
+        {
+            printf("\t%d is not a leaf node.", key);
+        }
+    }
+    else
+    {
+        printf("\tNode does not exist.");
+    }
+}
+void main()
+{
+    int i, ch, data;
+    printf("\tEnter height of the tree: ");
+    scanf("%d", &h);
+    size = pow(2, h + 1) - 1;
+    printf("\tEnter root: ");
+    scanf("%d", &data);
+    buildtree(1, data);
+    printf("\tBinary Tree: ");
+    display();
+    printf("\n\n\t\tMENU");
+    printf("\n\t1. Insert\t2. Delete\n\t3. Search\t4. Exit");
+    printf("\n\tEnter choice: ");
+    scanf("%d", &ch);
+    while(ch!=4)
+    {
+        if(ch==1)
+        {
+            printf("\n\tEnter parent node of new node: ");
+            scanf("%d", &data);
+            insert(data);
+            printf("\n\tBinary Tree:\t");
+            display();
+        }
+        else if(ch==2)
+        {
+            if(h >= 0)
+            {
+                printf("\n\tEnter node to delete: ");
+                scanf("%d", &data);
+                delete(data);
+                if(h >= 0)
+                {
+                    printf("\n\tBinary Tree:\t");
+                    display();
+                }
+                else
+                {
+                    printf("\tTree is empty.");
+                }
+            }
+            else
+            {
+                printf("\tTree is empty.");
+            }
+        }
+        else if(ch==3)
+        {
+            printf("\n\tEnter node to search: ");
+            scanf("%d", & data);
+            search(1, data);
+            if(a[loc] == data)
+            {
+                printf("\n\tNode found.");
+            }
+            else
+            {
+                printf("\n\tNode not found.");
+            }
+            printf("\n\tBinary Tree:\t");
+            display();
+        }
+        else
+        {
+            printf("\n\tinvalid choice....");
+        }
+        printf("\n\n\t\tMENU");
+        printf("\n\t1. Insert\t2. Delete\n\t3. Search\t4. Exit");
+        printf("\nEnter choice: ");
+        scanf("\n\t%d", &ch);
+    }
+}
+

@@ -1,0 +1,90 @@
+#include <stdio.h>
+void linearsearch(int [],int,int);
+void binarysearch(int [],int,int);
+void main()
+{
+    int sel,n,a[20],i,item,sel1;
+    printf("\n\n\t0.EXIT   1.LINEAR SEARCH   2.BINARY SEARCH   :   ");
+    scanf("%d",&sel);
+    while(sel!=0)
+    {
+        if(sel==1)
+        {
+            printf("\n\tEnter the number of elements in the array : ");
+            scanf("%d",&n);
+            printf("\n\tEnter the numbers : ");
+            for(i=0;i<n;i++)
+            {
+                scanf("%d",&a[i]);
+            }
+            printf("\n\tEnter the element to be searched : ");
+            scanf("%d",&item);
+            linearsearch(a,n,item);
+        }
+        else if(sel==2)
+        {
+            printf("\n\tEnter the number of elements in the array : ");
+            scanf("%d",&n);
+            printf("\n\tEnter the numbers(in sorted order) : ");
+            for(i=0;i<n;i++)
+            {
+                scanf("%d",&a[i]);
+            }
+            printf("\n\tEnter the element to be searched : ");
+            scanf("%d",&item);
+            binarysearch(a,n,item);
+        }
+        else
+        {
+            printf("\n\tINVALID CHOICE......");
+        }
+        printf("\n\n\t0.EXIT   1.LINEAR SEARCH   2.BINARY SEARCH   :   ");
+        scanf("%d",&sel);
+    }
+}
+void linearsearch(int a[],int n,int item)
+{
+    int flag=0,i;
+    for(i=0;i<n;i++)
+    {
+        if(item==a[i])
+        {
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0)
+    {
+        printf("\n\tElement not found....");
+    }
+    else
+    {
+        printf("\n\tElement found at index %d....",i);
+    }
+}
+void binarysearch(int a[],int n,int item)
+{
+    int beg=0,end=n-1,mid;
+    mid=(beg+end)/2;
+    while(beg<end && a[mid]!=item)
+    {
+        if(item<a[mid])
+        {
+            end=mid-1;
+        }
+        else
+        {
+            beg=mid+1;
+        }
+        mid=(beg+end)/2;
+    }
+    if(a[mid]==item)
+    {
+        printf("\n\tElement found at index %d....",mid);
+    }
+    else
+    {
+        printf("\n\tElement not found.....");
+    }
+}
+

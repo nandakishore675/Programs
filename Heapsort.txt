@@ -1,0 +1,101 @@
+#include<stdio.h>
+#include<stdlib.h>
+
+int a[100],arr[100],n,t,item;
+
+void insheap(int m,int val)
+{
+	int pos,par,temp;
+	pos=m;
+	a[m]=val;
+	while(pos>1)
+	{
+		par=pos/2;
+		if(a[pos]<=a[par])
+		{
+		    return;
+		}
+		else
+		{
+			temp=a[pos];
+			a[pos]=a[par];
+			a[par]=temp;
+			pos=par;
+		}
+	}
+}
+
+void delheap()
+{
+	int last,ptr,right,temp,left;
+	item=a[1];
+	last=a[n];
+	n--;
+	ptr=1;
+	left=2;
+	right=3;
+	a[ptr]=last;
+	while(left<=n)
+	{
+		if(a[ptr]>=a[left]&&a[ptr]>=a[right])
+		return;
+		else
+		{
+		    if(a[right]<=a[left])
+		    {
+			    temp=a[ptr];
+			    a[ptr]=a[left];
+			    a[left]=temp;
+			    ptr=left;
+		    }
+		    else
+		    {
+			    temp=a[ptr];
+			    a[ptr]=a[right];
+			    a[right]=temp;
+			    ptr=right;
+		    }
+		    left=2*ptr;
+		    right=left+1;
+	    }
+	}
+}	
+
+void heapsort()
+{
+	int k=n;
+	for(int j=1;j<=n;j++)
+	{
+	    insheap(j,a[j]);
+	}
+	printf("The heap is: ");
+	for(int i=1;i<=n;i++)
+    {
+        printf("%d  ",a[i]);
+    }
+	printf("\n");
+	while(n>=1)
+	{
+		delheap();
+		arr[k--]=item;
+	}
+	printf("The heap sorted array is: ");
+	for(int i=1;i<=t;i++)
+	{
+	    printf("%d\t",arr[i]);
+	}
+	printf("\n");
+}
+
+void main()
+{
+	printf("Enter the number of elements: ");
+	scanf("%d",&n);
+	t=n;
+	printf("Enter the elements: ");
+	for(int i=1;i<=n;i++)
+	{
+	    scanf("%d",&a[i]);
+	}
+	heapsort();
+} 

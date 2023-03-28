@@ -1,0 +1,202 @@
+#include<stdio.h>
+#include<stdlib.h>
+typedef struct chain
+{
+	int data;
+	struct chain *next;
+}chain;
+
+void linearProbe()
+{
+    int lock,key,flag=0,n,i,j;
+    int a[11]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+    printf("enter the number of elements: ");
+    scanf("%d",&n);
+    printf("enter the elements: ");
+    for(j=0;j<n;j++)
+    {
+        scanf("%d",&key);
+        for(i=0;i<11;i++)
+        {
+            flag=0;
+            lock=((key%11)+i)%11;
+            if(a[lock]==-1)
+            {
+                a[lock]=key;
+                flag=1;
+                break;
+            }
+        }
+        if(flag==0)
+        {
+            printf("No space available.\n");
+            break;
+        }
+    }
+    flag=0;
+    printf("enter the item to be  searched : ");
+    scanf("%d",&key);
+    for(i=0;i<11;i++)
+    {
+        lock=((key%11)+i)%11;
+        if(a[lock]==key)
+        {
+            printf("%d is found at postion %d\n",key,lock);
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0)
+    {
+        printf("Search unsuccessful!!\n");
+    }
+    printf("Hash Table: ");
+    for(j=0;j<11;j++)
+    {
+        printf("%d  ",a[j]);
+    }
+    printf("\n");
+}
+
+void quadProbe()
+{
+    int lock,key,flag=0,n,i,j;
+    int a[13]={-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};
+    printf("enter the number of elements: ");
+    scanf("%d",&n);
+    printf("enter the elements: ");
+    for(j=0;j<n;j++)
+    {
+        scanf("%d",&key);
+        for(i=0;i<13;i++)
+        {
+            flag=0;
+            lock=((key%13)+i+3*i*i)%13;
+            if(a[lock]==-1)
+            {
+                a[lock]=key;
+                flag=1;
+                break;
+            }
+        }
+        if(flag==0)
+        {
+            printf("No space available for %d.\n",key);
+        }
+    }
+    flag=0;
+    printf("enter the item to be searched : ");
+    scanf("%d",&key);
+    for(i=0;i<13;i++)
+    {
+        lock=((key%13)+i+3*i*i)%13;
+        if(a[lock]==key)
+        {
+            printf("%d is found at postion %d.\n",key,lock);
+            flag=1;
+            break;
+        }
+    }
+    if(flag==0)
+    {
+        printf("Search unsuccessful!!\n");
+    }
+    printf("Hash Table: ");
+    for(j=0;j<13;j++)
+    {
+        printf("%d  ",a[j]);
+    }
+    printf("\n");
+}
+
+void chaining()
+{
+	int n,j,lock,key;
+	chain *a[13]={NULL},*ptr,*new;
+	printf("enter the number of elements: ");
+    scanf("%d",&n);
+    printf("enter the elements: ");
+    for(j=0;j<n;j++)
+    {
+        scanf("%d",&key);
+        lock=key%13;
+		new=(chain *)malloc(sizeof(chain));
+		new->data=key;
+		new->next=NULL;
+		if(a[lock]==NULL)
+		{
+        	a[lock]=new;
+    	}
+    	else
+    	{
+        	ptr=a[lock];
+        	while(ptr->next!=NULL)
+        	{
+        	    ptr=ptr->next;
+        	}
+        	ptr->next=new;
+    	}
+    }
+	printf("Hash Table:\n");
+	for(j=0;j<13;j++)
+	{
+		printf("%d  -  ",j);
+		if(a[j]==NULL)
+		printf("NULL");
+		else
+		{	
+			ptr=a[j];
+        	while(ptr!=NULL)
+        	{
+            	printf("%d ---> ",ptr->data);
+            	ptr=ptr->next;
+			}
+		}
+		printf("\n");
+	}
+	printf("\nenter the item to be searched : ");
+    scanf("%d",&key);
+	for(j=0;j<13;j++)
+	{
+		ptr=a[j];
+        while(ptr!=NULL)
+        {
+            if(ptr->data==key)
+            {
+				printf("Search successful.\n");
+				return;
+			}
+    		ptr=ptr->next;
+		}
+	}
+	printf("Search unsuccessful!!\n");
+}
+
+void main()
+{
+        int n;
+        printf("\n\n1. Linear Probing\t2. Quadratic Probing\t3. Chaining\t4. Exit : ");
+        scanf("%d",&n);
+        while(n!=4)
+        {
+            if(n==1)
+            {
+                linearProbe();
+            }
+            else if(n==2)
+            {
+                quadProbe();
+            }
+            else if(n==3)
+            {
+                chaining();
+            }
+            else
+            {
+                printf("Invalid Choice!!\n");
+            }
+            printf("\n\n1. Linear Probing\t2. Quadratic Probing\t3. Chaining\t4. Exit : ");
+            scanf("%d",&n);
+        }
+}
+

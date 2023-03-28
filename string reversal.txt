@@ -1,0 +1,30 @@
+#include<stdio.h>
+#include<string.h>
+void reverse(char s[75])
+{
+     int n,m,i;
+     char temp;
+     temp=0;
+     n=strlen(s);
+     m=n;
+     for (i=0;i<(n/2);i++,m--)
+     {
+        temp=s[i];
+        s[i]=s[m];
+        s[m]=temp;
+     }
+     printf("\n\n\tThe reversed string is: ");
+     for (i=0;i<=n;i++)
+     printf("%c",s[i]);
+     printf("\n\n\n");
+     
+}
+void main()
+{
+    char t[50];
+    printf("\n\n\tName  : Nandakishore.P \n");
+    printf("\tRegNo  : RET19CS151\n\tRoll Number  : 07\n");
+    printf("\n\n\tEnter the string : ");
+    gets(t);
+    reverse(t);
+}
