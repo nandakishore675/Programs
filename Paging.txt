@@ -1,0 +1,153 @@
+#include<stdio.h>
+#include<stdlib.h>
+int internalfragmentation=0,mem,frames=0,fs,ch,frameallocation[100],count,intf[100],flag=0,a[100];
+void display()
+{
+    int i,j;
+    printf("\n\n\tprocess     size(kb)     frames allocated");
+    for(j=0;j<100;j++)
+    {
+        flag=0;
+        for(i=0;i<frames;i++)
+        {
+            if(frameallocation[i]==j)
+            {
+                printf("\n\t p%d",j);
+                flag=1;
+                break;
+            }
+        }
+        if(flag==1)
+        {
+            printf("          %d            ",a[j]);
+            for(i=0;i<frames;i++)
+            {
+                if(frameallocation[i]==j)
+                    printf("%d ",i);
+            }
+        }
+    }
+    printf("\n\nRemaining number of frames : %d",count);
+    printf("\nTotal internal fragmentation(kb) : %d",internalfragmentation);
+}
+void insertdefault()
+{
+    int pid,psz,pfno,x,i;
+    printf("Enter process id: ");
+    scanf("%d",&pid);
+    printf("Enter process size(kb): ");
+    scanf("%d",&psz);
+    a[pid]=psz;
+    if(psz%fs!=0)
+    {
+        pfno=psz/fs+1;
+        internalfragmentation+=(fs-(psz%fs));
+        intf[pid]=(fs-(psz%fs));
+    }
+    else
+    {
+        pfno=psz/fs;
+        intf[pid]=0;
+    }
+    printf("Number of frames required for p%d : %d",pid,pfno);
+    printf("\nEnter the frames to be allocated: ");
+    for(i=0;i<pfno;i++)
+    {
+        scanf("%d",&x);
+        frameallocation[x]=pid;
+        count--;
+    }
+    display();
+}
+void insert()
+{
+    int pid,psz,pfno,x,i;
+    printf("Enter process id: ");
+    scanf("%d",&pid);
+    printf("Enter process size(kb): ");
+    scanf("%d",&psz);
+    a[pid]=psz;
+    if(psz%fs!=0)
+    {
+        pfno=psz/fs+1;
+    }
+    else
+    {
+        pfno=psz/fs;
+    }
+    printf("Number of frames required for p%d : %d",pid,pfno);
+    if(pfno>count)
+    {
+        printf("\nThe required number of frames are not available....");
+        return;
+    }
+    if(psz%fs!=0)
+    {
+        internalfragmentation+=(fs-(psz%fs));
+        intf[pid]=(fs-(psz%fs));
+    }
+    else
+    {
+        intf[pid]=0;
+    }
+    for(i=0;i<pfno;i++)
+    {
+        x=rand()%frames;
+        while(frameallocation[x]!=1000)
+        {
+            x=(x+1)%frames;
+        }
+        frameallocation[x]=pid;
+        count--;
+    }
+    display();
+}
+void delete()
+{
+    int pid,i;
+    printf("Enter the pid of the process to be deleted : ");
+    scanf("%d",&pid);
+    for(i=0;i<frames;i++)
+    {
+        if(frameallocation[i]==pid)
+        {
+            count++;
+            frameallocation[i]=1000;
+        }
+    }
+    internalfragmentation-=intf[pid];
+    display();
+}
+void main()
+{
+    int i;
+    printf("\n\tNANDAKISHORE  RET19CS151   ROLL NUMBER-07");
+    printf("\n\nEnter the available memory(kb): ");
+    scanf("%d",&mem);
+    printf("Enter the frame size(kb): ");
+    scanf("%d",&fs);
+    frames=mem/fs;
+    count=frames;
+    printf("No. of frames: %d\n",frames);
+	for(i=0;i<frames;i++)
+		frameallocation[i]=1000;
+    printf("\n\nMENU");
+    printf("\n1.Insert default 2.Insert 3.Delete 4.Exit");
+    printf("\nEnter choice : ");
+    scanf("%d",&ch);
+    while(ch!=4)
+    {
+        if(ch==1)
+          insertdefault();
+        else if(ch==2)
+          insert();
+        else if(ch==3)
+          delete();
+        else
+          printf("\nInvalid choice....");
+        printf("\n\n\nMENU");
+        printf("\n1.Insert default 2.Insert 3.Delete 4.Exit");
+        printf("\nEnter choice : ");
+        scanf("%d",&ch);
+    }
+}

@@ -1,0 +1,129 @@
+#include <stdio.h>
+#include<stdbool.h>
+void main()
+{
+    int n,resinst,i,j,max[100][100],allocated[100][100],need[100][100],available[100],k=1,count=0,seq[100],z=-1,flag=0;
+    bool finish[100];
+    printf("\n\tEnter the number of processes : ");
+    scanf("%d",&n);
+    for(i=0;i<n;i++)
+    {
+        finish[i]=false;
+    }
+    printf("\n\tEnter the number of resource instances : ");
+    scanf("%d",&resinst);
+    printf("\n\tEnter the max matrix : ");
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<resinst;j++)
+        {
+            scanf("%d",&max[i][j]);
+        }
+    }
+    printf("\n\tEnter the allocation matrix : ");
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<resinst;j++)
+        {
+            scanf("%d",&allocated[i][j]);
+        }
+    }
+    printf("\n\tEnter the available resources : ");
+    for(i=0;i<resinst;i++)
+    {
+        scanf("%d",&available[i]);
+    }
+    for(i=0;i<n;i++)
+    {
+        for(j=0;j<resinst;j++)
+        {
+            need[i][j]=max[i][j]-allocated[i][j];
+        }
+    }
+    printf("\n\n\n**************************************************************************************\n");
+    printf("\n\tProcess\t\tMax\t   Allocated\t    Available\t       Need");
+    for(i=0;i<n;i++)
+    {
+        printf("\n\t P%d\t\t",i);
+        for(j=0;j<resinst;j++)
+        {
+            printf("%d ",max[i][j]);
+        }
+        printf("\t      ");
+        for(j=0;j<resinst;j++)
+        {
+            printf("%d ",allocated[i][j]);
+        }
+        printf("\t      ");
+        if(k==1)
+        {
+            for(j=0;j<resinst;j++)
+            {
+                printf("%d ",available[j]);
+            }
+            k++;
+        }
+        printf("\t      ");
+        if(i!=0)
+        {
+            printf("\t      ");
+        }
+        for(j=0;j<resinst;j++)
+        {
+            printf("%d ",need[i][j]);
+        }
+    }
+    printf("\n\n");
+    for(i=0;i<n;i++)
+    {
+        count=0;
+        if(finish[i]==false)
+        {
+            for(j=0;j<resinst;j++)
+            {
+                if(available[j]>=need[i][j])
+                {
+                    count++;
+                }
+            }
+            if(count==resinst)
+            {
+                for(j=0;j<resinst;j++)
+                {
+                    available[j]+=allocated[i][j];
+                }
+                z++;
+                seq[z]=i;
+                finish[i]=true;
+                i=-1;
+            }
+        }
+    }
+    for(i=0;i<n;i++)
+    {
+        if(finish[i]!=true)
+        {
+            flag=1;
+        }
+    }
+    if(flag==0)
+    {
+        printf("\n\tThe system is in a safe sequence..");
+        printf("\n\tSafe sequence : ");
+        for(i=0;i<n;i++)
+        {
+            if(i!=n-1)
+            {
+                printf("P%d ---> ",seq[i]);
+            }
+            else
+            {
+                printf("P%d  ",seq[i]);
+            }
+        }
+    }
+    else
+    {
+        printf("\n\tThe system is unsafe...");
+    }
+}

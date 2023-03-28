@@ -1,0 +1,222 @@
+#include <stdio.h>
+void fcfs(int,int[],int,int[]);
+void lru(int,int[],int,int[]);
+void optimal(int,int[],int,int[]);
+void main()
+{
+    int pr,choice,a[100],frameno,frame[100],i,frame1[100],frame2[100];
+    printf("\n\tEnter the number of page references : ");
+    scanf("%d",&pr);
+    printf("\n\tEnter the reference string : ");
+    for(i=0;i<pr;i++)
+    {
+        scanf("%d",&a[i]);
+    }
+    printf("\n\tEnter the available number of frames : ");
+    scanf("%d",&frameno);
+    for(i=0;i<frameno;i++)
+    {
+        frame[i]=-1;
+        frame1[i]=-1;
+        frame2[i]=-1;
+    }
+    printf("\n\tSelect one operation : ");
+    printf("\n\t1.fcfs   2.lru   3.optimal   4.quit   :  ");
+    scanf("%d",&choice);
+    while(choice!=4)
+    {
+        if(choice==1)
+        {
+            fcfs(pr,a,frameno,frame);
+        }
+        else if(choice==2)
+        {
+            lru(pr,a,frameno,frame1);
+        }
+        else if(choice==3)
+        {
+            optimal(pr,a,frameno,frame2);
+        }
+        else
+        {
+            printf("\n\tinvalid choice...");
+        }
+        printf("\n\n\tSelect one operation : ");
+        printf("\n\t1.fcfs   2.lru   3.optimal   4.quit    :   ");
+        scanf("%d",&choice);
+    }
+}
+void fcfs(int pr,int a[],int frameno,int frame[])
+{
+    int i,k,flag,pf=0,m,j=-1;
+    printf("\n\tThe page replacement process is : \n");
+    for(i=0;i<pr;i++)
+    {
+        flag=0;
+        for(k=0;k<frameno;k++)
+        {
+            if(a[i]==frame[k])
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=1)
+        {
+            j=(j+1)%frameno;
+            frame[j]=a[i];
+            pf++;
+            printf("\n");
+            for(m=0;m<frameno;m++)
+            {
+                printf("  %d",frame[m]);
+            }
+            printf("\tPage fault : %d",pf);
+        }
+    }
+    printf("\n\t total number of page faults : %d ",pf);
+}
+void lru(int pr,int a[],int frameno,int frame[])
+{
+    int list[100],count=0,flag,j=0,z=0,pf=0,i,k,m,temp,q,l,min,key,r;
+    printf("\n\tThe page replacement process is : \n");
+    for(i=0;i<pr;i++)
+    {
+        for(r=0;r<frameno;r++)
+        {
+            list[r]=-1;
+        }
+        flag=0;
+        for(k=0;k<frameno;k++)
+        {
+            if(a[i]==frame[k])
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=1 && count<frameno)
+        {
+            count++;
+            frame[j]=a[i];
+            j++;
+            pf++;
+            printf("\n");
+            for(m=0;m<frameno;m++)
+            {
+                printf("  %d",frame[m]);
+            }
+            printf("\tPage fault : %d",pf);
+        }
+        else if(flag!=1 && count==frameno)
+        {
+            for(l=0;l<frameno;l++)
+            {
+                temp=i;
+                while(temp>=0)
+                {
+                    if(a[temp]==frame[l])
+                    {
+                        list[l]=temp;
+                        break;
+                    }
+                    temp--;
+                }
+            }
+            min=list[0];
+            for(q=0;q<frameno;q++)
+            {
+                if(min>list[q])
+                {
+                    min=list[q];
+                }
+            }
+            key=a[min];
+            for(j=0;j<frameno;j++)
+            {
+                if(key==frame[j])
+                {
+                    frame[j]=a[i];
+                    pf++;
+                    printf("\n");
+                    for(m=0;m<frameno;m++)
+                    {
+                        printf("  %d",frame[m]);
+                    }
+                    printf("\tPage fault : %d",pf);
+                }
+            }
+        }
+    }
+    printf("\n\t total number of page faults : %d ",pf);
+}
+void optimal(int pr,int a[],int frameno,int frame[])
+{
+    int list[100],i,j=0,max,loc,k,flag=0,count=0,pf=0,m,l,temp,q,r;
+    printf("\n\tThe page replacement process is : \n");
+    for(i=0;i<pr;i++)
+    {
+        for(r=0;r<frameno;r++)
+        {
+            list[r]=1000;
+        }
+        flag=0;
+        for(k=0;k<frameno;k++)
+        {
+            if(a[i]==frame[k])
+            {
+                flag=1;
+                break;
+            }
+        }
+        if(flag!=1 && count<frameno)
+        {
+            count++;
+            frame[j]=a[i];
+            j++;
+            pf++;
+            printf("\n");
+            for(m=0;m<frameno;m++)
+            {
+                printf("  %d",frame[m]);
+            }
+            printf("\tPage fault : %d",pf);
+        }
+        else if(flag!=1 && count==frameno)
+        {
+            for(l=0;l<frameno;l++)
+            {
+                temp=i;
+                while(temp<pr)
+                {
+                    if(a[temp]==frame[l])
+                    {
+                        list[l]=temp;
+                        break;
+                    }
+                    temp++;
+                }
+            }
+            max=list[0];
+            loc=0;
+            for(q=0;q<frameno;q++)
+            {
+                if(max<list[q])
+                {
+                    max=list[q];
+                    loc=q;
+                }
+            }
+            frame[loc]=a[i];
+            pf++;
+            printf("\n");
+            for(m=0;m<frameno;m++)
+            {
+                printf("  %d",frame[m]);
+            }
+            printf("\tPage fault : %d",pf);
+        }
+    }
+    printf("\n\t total number of page faults : %d ",pf);
+}
+

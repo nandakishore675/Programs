@@ -1,0 +1,60 @@
+#include<stdio.h>
+#include<stdlib.h>
+#include<pthread.h>
+#include<semaphore.h>
+#define itemmax 5
+#define buffsize 5
+sem_t empty;
+sem_t full;
+int in=0,out=0,buffer[buffsize];
+pthread_mutex_t mutex;
+void *producer(void *pno)
+{
+	int i,item;
+	for(i=0;i<itemmax;i++)
+	{
+		item=rand();
+		sem_wait(&empty);
+		pthread_mutex_lock(&mutex);
+		buffer[in]=item;
+		printf("Producer %d inserted item %d at buffer position %d\n",*((int *)pno),item, in);
+		in=(in+1)%buffsize;
+		pthread_mutex_unlock(&mutex);
+		sem_post(&full);
+	}
+}
+void *consumer(void *cno)
+{
+	int i,item;
+	for(i=0;i<itemmax;i++)
+	{
+		sem_wait(&full);
+		pthread_mutex_lock(&mutex);
+		item=buffer[out];
+		printf("Producer %d removed item %d at buffer position %d\n",*((int *)cno),item, out);
+		out=(out+1)%buffsize;
+		pthread_mutex_unlock(&mutex);
+		sem_post(&empty);
+	}
+}
+void main()
+{
+	pthread_t producers[3],consumers[3];
+	pthread_mutex_init(&mutex,NULL);
+	sem_init(&empty,0,buffsize);
+	sem_init(&full,0,0);
+	int i,a[3]={1,2,3};
+
+	for(i=0;i<3;i++)
+		pthread_create(&producers[i],NULL,(void *)producer,(void *)&a[i]);
+
+	for(i=0;i<3;i++)
+		pthread_create(&consumers[i],NULL,(void *)consumer,(void *)&a[i]);
+	for(i=0;i<3;i++)
+		pthread_join(producers[i],NULL);
+	for(i=0;i<3;i++)
+		pthread_join(consumers[i],NULL);
+	pthread_mutex_destroy(&mutex);
+	sem_destroy(&empty);
+	sem_destroy(&full);
+}

@@ -1,0 +1,23 @@
+#include<stdio.h>
+#include<sys/types.h>
+#include<unistd.h>
+void main()
+{
+int p,x;
+printf("My pid before calling fork() is %d\n",getpid());
+p=fork();
+if(p==0)
+{
+printf("Child : Hello I'm the child process\n");
+printf("Child : Child's PID : %d\n",getpid());
+printf("Child : Parent's PID : %d\n",getppid());
+printf("Return value of fork() call in child process : %d\n",p);
+}
+else
+{
+printf("Parent : Hello I'm the parent process\n");
+printf("Parent : Parent's PID : %d\n",getpid());
+printf("Parent : Child's PID : %d\n",p);
+printf("Return value of fork() call in parent process : %d\n",p);
+}
+}

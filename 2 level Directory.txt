@@ -1,0 +1,298 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdbool.h>
+
+struct file
+{
+    char filename[20];
+    struct file* next;
+};
+
+struct directory
+{
+    char dirname[20];
+    struct file* flstart;
+    struct directory* dlstart;
+    struct directory* next;
+};
+
+struct file* slds = NULL;
+struct directory *tl_directory = NULL;
+struct directory *h_directory = NULL;
+
+char two_level_root[20];
+
+void display()
+{
+    struct directory *ptr1;
+    struct file *ptr2;
+
+    printf("\nTwo level directory:\n");
+    printf("%-38s[root]\n", two_level_root);
+
+    ptr1 = tl_directory;
+
+    while (ptr1 != NULL)
+    {
+        printf("\t-%-29s[directory]\n", ptr1 -> dirname);
+
+        ptr2 = ptr1 -> flstart;
+
+        while (ptr2 != NULL)
+        {
+            printf("\t\t-%-21s[file]\n", ptr2 -> filename);
+            ptr2 = ptr2 -> next;
+        }
+
+        ptr1 = ptr1 -> next;
+    }
+}
+
+void create_directory()
+{
+    char str[20];
+
+    if (tl_directory == NULL)
+    {
+        struct directory *newnode = (struct directory *)malloc(sizeof(struct directory));
+        newnode -> next = NULL;
+        newnode -> dlstart = NULL;
+        newnode -> flstart = NULL;
+
+        printf("Enter the name of the directory: ");
+        scanf("%s", str);
+
+        strcpy(newnode -> dirname, str);
+
+        tl_directory = newnode;
+        printf("Directory Created!!.\n");
+
+    }
+    else
+    {
+        struct directory *ptr;
+        struct directory *newnode = (struct directory *)malloc(sizeof(struct directory));
+
+        printf("Enter the name of the directory: ");
+        scanf("%s", str);
+        newnode -> next = NULL;
+        newnode -> dlstart = NULL;
+        newnode -> flstart = NULL;
+
+        ptr = tl_directory;
+        while (ptr != NULL)
+        {
+            if (strcmp(str, ptr -> dirname) == 0)
+            {
+                printf("Directory already exists. Directory cannot be created!!\n");
+                return;
+            }
+            ptr = ptr -> next;
+        }
+
+        ptr = tl_directory;
+        while (ptr -> next != NULL)
+            ptr = ptr -> next;
+
+        strcpy(newnode -> dirname, str);
+        ptr -> next = newnode;
+
+        printf("Directory Created!!.\n");
+    }
+}
+
+void create_file()
+{
+    int flag = 0;
+    char str[20];
+    struct directory *ptr1;
+
+    printf("Enter the parent directory: ");
+    scanf("%s", str);
+
+    ptr1 = tl_directory;
+    while (ptr1 != NULL)
+    {
+        if (strcmp(str, ptr1 -> dirname) == 0)
+        {
+            flag = 1;
+            break;
+        }
+        ptr1 = ptr1 -> next;
+    }
+
+    if (flag == 0)
+    {
+        printf("Parent directory not found!! Insertion not possible!!\n");
+        return;
+    }
+
+    if (ptr1 -> flstart == NULL)
+    {
+        struct file *newnode = (struct file *)malloc(sizeof(struct file));
+        newnode -> next = NULL;
+
+        printf("Enter the name of the file: ");
+        scanf("%s", str);
+
+        strcpy(newnode -> filename, str);
+
+        ptr1 -> flstart = newnode;
+        
+        printf("File Created!!.\n");
+
+    }
+    else
+    {
+        struct file *ptr;
+        struct file *newnode = (struct file *)malloc(sizeof(struct file));
+        newnode -> next = NULL;
+
+        printf("Enter the name of the file: ");
+        scanf("%s", str);
+
+        ptr = ptr1 -> flstart;
+        while (ptr != NULL)
+        {
+            if (strcmp(str, ptr -> filename) == 0)
+            {
+                printf("File already exists. File cannot be created!!\n");
+                return;
+            }
+            ptr = ptr -> next;
+        }
+
+        ptr = ptr1 -> flstart;
+        while (ptr -> next != NULL)
+            ptr = ptr -> next;
+
+        strcpy(newnode -> filename, str);
+        ptr -> next = newnode;
+
+        printf("File Created!!.\n");
+    }
+}
+
+void delete()
+{
+    char filename[20], found = 0;
+    struct file *ptr;
+    struct file *preptr;
+    struct directory *ptr1;
+
+    printf("Enter the name of the file: ");
+    scanf("%s", filename);
+
+    ptr1 = tl_directory;
+    while (ptr1 != NULL)
+    {
+        preptr = ptr = ptr1 -> flstart;
+
+        while (ptr != NULL)
+        {
+            if (strcmp(ptr -> filename, filename) == 0)
+            {
+                found = 1;
+                break;
+            }
+            preptr = ptr;
+            ptr = ptr -> next;
+        }
+
+        if (found == 1)
+            break;
+
+        ptr1 = ptr1 -> next;
+    }
+
+    if (found == 1)
+    {
+        if (ptr == ptr1 -> flstart)
+        {
+            if (ptr1 -> flstart -> next == NULL)
+            {
+                ptr1 -> flstart = NULL;
+                free(ptr);
+            }
+            else
+            {
+                ptr1 -> flstart = ptr -> next;
+                free(ptr);
+            }
+        }
+        else
+        {
+            preptr -> next = ptr -> next;
+            free(ptr);
+        }
+        printf("File %s deleted successfully.\n", filename);
+    }
+    else
+        printf("File %s not found. Deletion failed!!\n", filename);
+}
+
+void search()
+{
+    struct file *ptr;
+    struct directory *ptr1;
+    char str[20];
+
+    printf("Enter the name of the file: ");
+    scanf("%s", str);
+
+    if (tl_directory == NULL)
+        printf("Root directory empty.\n");
+    else
+    {
+        ptr1 = tl_directory;
+
+        while (ptr1 != NULL)
+        {
+            ptr = ptr1 -> flstart;
+
+            while (ptr != NULL)
+            {
+                if (strcmp(ptr -> filename, str) == 0)
+                {
+                    printf("File %s found.\n", str);
+                    return;
+                }
+                ptr = ptr -> next;
+            }
+            ptr1 = ptr1 -> next;
+        }
+
+        printf("File %s not found.\n", str);
+    }
+}
+
+void main()
+{
+    int z;
+    printf("\nNANDAKISHORE----RET19CS151---ROLL NUMBER - 07\n\n");
+    printf("Enter name of the root directory: ");
+    scanf("%s", two_level_root);
+
+    do
+    {
+        
+        printf("\n\n1. Create directory\n2. Create file\n3. Delete file\n4. Search file\n5. Display files\n6. Exit\n");
+        printf("\nEnter your choice : ");
+        scanf("%d", &z);
+
+        switch (z)
+        {
+            case 1: create_directory();
+                    break;
+            case 2: create_file();
+                    break;
+            case 3: delete();
+                    break;
+            case 4: search();
+                    break;
+            case 5: display();
+                    break;
+        }
+    } while (z >= 1 && z <= 5);
+}
